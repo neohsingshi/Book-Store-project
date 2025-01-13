@@ -23,7 +23,7 @@ public class ShoppingCartPanel extends JPanel implements ActionListener {
     private Map<Integer, CartItem> cartItems = new HashMap<>();
     private MainFrame mainFrame;
     private String userIdentifier;
-    private BookManagementPanel bookManagementPanel; // 添加对 BookManagementPanel 的引用
+    private BookManagementPanel bookManagementPanel; // Adding a reference to BookManagementPanel
 
     public ShoppingCartPanel(MainFrame mainFrame, String userIdentifier, BookManagementPanel bookManagementPanel) {
         this.mainFrame = mainFrame;
@@ -31,18 +31,18 @@ public class ShoppingCartPanel extends JPanel implements ActionListener {
         this.bookManagementPanel = bookManagementPanel;
         setLayout(new BorderLayout());
 
-        // 初始化表格
-        tableModel = new DefaultTableModel(new Object[]{"书名", "价格", "数量", "小计"}, 0);
+        // Initializing Forms
+        tableModel = new DefaultTableModel(new Object[]{"reputation as calligrapher", "prices", "quantities", "Subtotal"}, 0);
         cartTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(cartTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 总价标签
-        totalPriceLabel = new JLabel("总价: 0.00 元");
+        // Total price tag
+        totalPriceLabel = new JLabel("total price: 0.00 RM");
         add(totalPriceLabel, BorderLayout.SOUTH);
 
-        // 结账按钮
-        checkoutButton = new JButton("结账");
+        // Checkout button
+        checkoutButton = new JButton("pay the bill");
         checkoutButton.addActionListener(this);
         add(checkoutButton, BorderLayout.NORTH);
     }
@@ -56,8 +56,8 @@ public class ShoppingCartPanel extends JPanel implements ActionListener {
     }
 
     private void updateCartDisplay() {
-        SwingUtilities.invokeLater(() -> { // 确保UI更新在EDT中执行
-            tableModel.setRowCount(0); // 清空现有数据
+        SwingUtilities.invokeLater(() -> { // Ensure UI updates are performed in EDT
+            tableModel.setRowCount(0); // Emptying existing data
             double totalPrice = 0.0;
 
             for (CartItem item : cartItems.values()) {
@@ -66,13 +66,13 @@ public class ShoppingCartPanel extends JPanel implements ActionListener {
                 totalPrice += lineTotal;
             }
 
-            totalPriceLabel.setText(String.format("总价: %.2f 元", totalPrice));
+            totalPriceLabel.setText(String.format("total price: %.2f RM", totalPrice));
         });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if ("结账".equals(e.getActionCommand())) {
+        if ("pay the bill".equals(e.getActionCommand())) {
             performCheckout();
         }
     }
@@ -81,45 +81,45 @@ public class ShoppingCartPanel extends JPanel implements ActionListener {
         Connection conn = null;
         try {
             conn = DatabaseConnection.getConnection();
-            conn.setAutoCommit(false); // 开始事务
+            conn.setAutoCommit(false); // Commencement of business
 
-            // 检查每项商品的库存是否充足
+            // Check that each item is adequately stocked
             for (CartItem item : cartItems.values()) {
                 if (!checkStockAndValidity(conn, item.bookId, item.quantity)) {
-                    JOptionPane.showMessageDialog(null, "书籍ID：" + item.bookId + " 库存不足或无效！");
-                    conn.rollback(); // 回滚事务
-                    return; // 停止结账流程
+                    JOptionPane.showMessageDialog(null, "Book ID：" + item.bookId + " Insufficient or ineffective inventory！");
+                    conn.rollback(); // Rolling back transactions
+                    return; // Stopping the closing process
                 }
             }
 
-            // 更新库存并生成订单记录
+            // Update inventory and generate order records
             for (CartItem item : cartItems.values()) {
                 updateStock(conn, item.bookId, item.quantity);
                 generateOrderRecord(conn, item.bookId, item.quantity);
             }
 
-            conn.commit(); // 提交事务
-            JOptionPane.showMessageDialog(null, "结账成功！");
+            conn.commit(); // Submission of transactions
+            JOptionPane.showMessageDialog(null, "Checkout Successful！");
             clearCart();
 
-            // 触发书籍管理面板的数据刷新
+            // Trigger a data refresh in the book management panel
             if (bookManagementPanel != null) {
                 bookManagementPanel.loadBooks();
             }
         } catch (SQLException ex) {
             try {
                 if (conn != null) {
-                    conn.rollback(); // 回滚事务
+                    conn.rollback(); // Rolling back transactions
                 }
             } catch (SQLException rollbackEx) {
                 rollbackEx.printStackTrace();
             }
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "结账失败：" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Checkout Failure：" + ex.getMessage(), "incorrect", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (conn != null) {
-                    conn.setAutoCommit(true); // 恢复默认提交模式
+                    conn.setAutoCommit(true); // Restore default commit mode
                     conn.close();
                 }
             } catch (SQLException closeEx) {
@@ -137,7 +137,7 @@ public class ShoppingCartPanel extends JPanel implements ActionListener {
 
             ResultSet rs = pstmt.executeQuery();
 
-            return rs.next(); // 如果查询返回结果，则表示库存充足且书籍ID有效
+            return rs.next(); // If the query returns a result, the inventory is sufficient and the book ID is valid
         }
     }
 
@@ -152,7 +152,7 @@ public class ShoppingCartPanel extends JPanel implements ActionListener {
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected == 0) {
-                throw new SQLException("书籍ID：" + bookId + " 库存不足或无效");
+                throw new SQLException("Book ID：" + bookId + " Insufficient or ineffective inventory");
             }
         }
     }

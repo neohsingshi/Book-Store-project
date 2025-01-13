@@ -18,7 +18,7 @@ public class ChangePasswordDialog extends JDialog {
     private JPasswordField confirmPasswordField;
     private JLabel messageLabel;
     private MainFrame mainFrame;
-    private String userIdentifier; // 用户标识符（例如学号或教工号）
+    private String userIdentifier; // User identifier (e.g., student or faculty number)
 
     public ChangePasswordDialog(MainFrame mainFrame, String title, boolean modal, String userIdentifier) {
         super((JFrame)null, title, modal);
@@ -26,11 +26,11 @@ public class ChangePasswordDialog extends JDialog {
         this.userIdentifier = userIdentifier;
         initializeComponents();
         setLocationRelativeTo(null); // Center the dialog on screen
-        setResizable(false); // 禁止用户调整对话框大小
-        pack(); // 根据组件的最佳尺寸调整对话框大小
-        setMinimumSize(new Dimension(300, 200)); // 设置最小尺寸
-        setPreferredSize(new Dimension(400, 250)); // 设置首选尺寸
-        pack(); // 再次调整以确保最佳尺寸
+        setResizable(false); // Prohibit users from resizing dialog boxes
+        pack(); // Resize the dialog according to the optimal size of the component
+        setMinimumSize(new Dimension(300, 200)); // Setting the minimum size
+        setPreferredSize(new Dimension(400, 250)); // Setting the preferred size
+        pack(); // Re-adjustment to ensure optimal size
     }
 
     private void initializeComponents() {
@@ -39,7 +39,7 @@ public class ChangePasswordDialog extends JDialog {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
-        JLabel oldPasswordLabel = new JLabel("旧密码:");
+        JLabel oldPasswordLabel = new JLabel("old password:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(oldPasswordLabel, gbc);
@@ -52,7 +52,7 @@ public class ChangePasswordDialog extends JDialog {
         add(oldPasswordField, gbc);
         gbc.gridwidth = 1;
 
-        JLabel newPasswordLabel = new JLabel("新密码:");
+        JLabel newPasswordLabel = new JLabel("new password:");
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(newPasswordLabel, gbc);
@@ -65,7 +65,7 @@ public class ChangePasswordDialog extends JDialog {
         add(newPasswordField, gbc);
         gbc.gridwidth = 1;
 
-        JLabel confirmPasswordLabel = new JLabel("确认新密码:");
+        JLabel confirmPasswordLabel = new JLabel("Confirm new password:");
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(confirmPasswordLabel, gbc);
@@ -78,19 +78,19 @@ public class ChangePasswordDialog extends JDialog {
         add(confirmPasswordField, gbc);
         gbc.gridwidth = 1;
 
-        JButton saveButton = new JButton("保存");
+        JButton saveButton = new JButton("preservation");
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (validateInput()) {
                     if (updatePassword()) {
-                        JOptionPane.showMessageDialog(ChangePasswordDialog.this, "密码修改成功！");
-                        dispose(); // 关闭对话框
+                        JOptionPane.showMessageDialog(ChangePasswordDialog.this, "Password changed successfully！");
+                        dispose(); // Close dialog box
                     } else {
-                        messageLabel.setText("密码修改失败，请稍后再试！");
+                        messageLabel.setText("Password change failed, please try again later！");
                     }
                 } else {
-                    messageLabel.setText("密码修改失败，请检查输入！");
+                    messageLabel.setText("Password change failed, please check the input！");
                 }
             }
         });
@@ -113,19 +113,19 @@ public class ChangePasswordDialog extends JDialog {
         char[] newPassword = newPasswordField.getPassword();
         char[] confirmPassword = confirmPasswordField.getPassword();
 
-        // 检查所有字段是否非空
+        // Checks if all fields are non-null
         if (oldPassword.length == 0 || newPassword.length == 0 || confirmPassword.length == 0) {
-            messageLabel.setText("所有字段不能为空！");
+            messageLabel.setText("All fields cannot be null！");
             return false;
         }
 
-        // 验证新密码是否一致
+        // Verify that the new password is the same
         if (!new String(newPassword).equals(new String(confirmPassword))) {
-            messageLabel.setText("新密码和确认密码不一致！");
+            messageLabel.setText("Inconsistency between the new password and the confirmation password！");
             return false;
         }
 
-        // 验证旧密码是否正确
+        // Verify that the old password is correct
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("SELECT password FROM users WHERE identifier = ?")) {
 
@@ -134,7 +134,7 @@ public class ChangePasswordDialog extends JDialog {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    // 直接比较明文密码
+                    // Direct comparison of plaintext passwords
                     String storedPassword = rs.getString("password");
                     System.out.println("Stored Password: " + storedPassword);
                     System.out.println("Old Password Input: " + new String(oldPassword));
@@ -142,18 +142,18 @@ public class ChangePasswordDialog extends JDialog {
                     if (new String(oldPassword).equals(storedPassword)) {
                         return true;
                     } else {
-                        messageLabel.setText("旧密码错误！");
+                        messageLabel.setText("Old password error！");
                         System.out.println("Password mismatch.");
                         return false;
                     }
                 } else {
-                    messageLabel.setText("用户不存在！");
+                    messageLabel.setText("The user does not exist！");
                     System.out.println("User not found for identifier: " + userIdentifier);
                     return false;
                 }
             }
         } catch (SQLException ex) {
-            messageLabel.setText("数据库错误，请稍后再试。");
+            messageLabel.setText("Database error, please try again later。");
             ex.printStackTrace();
             System.out.println("Database error occurred: " + ex.getMessage());
             return false;
@@ -164,7 +164,7 @@ public class ChangePasswordDialog extends JDialog {
         char[] newPassword = newPasswordField.getPassword();
         try (Connection conn = DatabaseConnection.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement("UPDATE users SET password = ? WHERE identifier = ?");
-            pstmt.setString(1, new String(newPassword)); // 存储明文密码
+            pstmt.setString(1, new String(newPassword)); // Storing plaintext passwords
             pstmt.setString(2, userIdentifier);
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;

@@ -22,35 +22,35 @@ public class BookManagementPanel extends JPanel implements ActionListener {
     public BookManagementPanel() {
         setLayout(new BorderLayout());
 
-        // 初始化表格
-        tableModel = new DefaultTableModel(new Object[]{"ID", "书名", "价格", "库存", "类别"}, 0);
+        // Initialising the form
+        tableModel = new DefaultTableModel(new Object[]{"ID", "reputation as calligrapher", "prices", "property or cash held in reserve", "form"}, 0);
         bookTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(bookTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 搜索面板
+        // search panel
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        searchPanel.add(new JLabel("书名:"));
+        searchPanel.add(new JLabel("reputation as calligrapher:"));
         titleSearchField = new JTextField(15);
         searchPanel.add(titleSearchField);
 
-        searchPanel.add(new JLabel("类别:"));
-        categorySearchBox = new JComboBox<>(); // 不再立即设置为 "全部"
+        searchPanel.add(new JLabel("form:"));
+        categorySearchBox = new JComboBox<>(); // No longer immediately set to "All"
         searchPanel.add(categorySearchBox);
 
-        searchButton = new JButton("搜索");
+        searchButton = new JButton("search");
         searchButton.addActionListener(this);
         searchPanel.add(searchButton);
 
         add(searchPanel, BorderLayout.NORTH);
 
-        // 按钮面板
+        // button panel
         JPanel buttonPanel = new JPanel();
-        addButton = new JButton("添加书籍");
-        updateButton = new JButton("更新书籍");
-        deleteButton = new JButton("删除书籍");
+        addButton = new JButton("Add a book");
+        updateButton = new JButton("Updated books");
+        deleteButton = new JButton("Delete books");
 
         addButton.addActionListener(this);
         updateButton.addActionListener(this);
@@ -62,8 +62,8 @@ public class BookManagementPanel extends JPanel implements ActionListener {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        loadCategories(); // 加载类别列表并设置默认值
-        loadBooks(); // 加载所有书籍数据
+        loadCategories(); // Load a list of categories and set default values
+        loadBooks(); // Load all book data
     }
 
     private void loadCategories() {
@@ -71,23 +71,23 @@ public class BookManagementPanel extends JPanel implements ActionListener {
             PreparedStatement pstmt = conn.prepareStatement("SELECT DISTINCT category FROM books");
             ResultSet rs = pstmt.executeQuery();
 
-            // 确保 "全部" 是第一个添加的元素
+            // Ensure that "all" is the first element added
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            model.addElement("全部");
+            model.addElement("all");
 
             while (rs.next()) {
                 model.addElement(rs.getString("category"));
             }
 
-            // 更新类别下拉框
+            // Update category drop-down box
             categorySearchBox.setModel(model);
 
-            // 默认选择 "全部"
-            categorySearchBox.setSelectedItem("全部");
+            // The default selection is "All"
+            categorySearchBox.setSelectedItem("all");
 
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "加载类别失败：" + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Failed to load category：" + e.getMessage());
         }
     }
 
@@ -108,12 +108,12 @@ public class BookManagementPanel extends JPanel implements ActionListener {
             if (!title.isEmpty()) {
                 pstmt.setString(parameterIndex++, "%" + title + "%");
             }
-            if (!"全部".equals(category)) {
+            if (!"all".equals(category)) {
                 pstmt.setString(parameterIndex++, category);
             }
 
             ResultSet rs = pstmt.executeQuery();
-            tableModel.setRowCount(0); // 清空现有数据
+            tableModel.setRowCount(0); // Emptying existing data
             while (rs.next()) {
                 tableModel.addRow(new Object[]{
                         rs.getInt("id"),
@@ -125,25 +125,25 @@ public class BookManagementPanel extends JPanel implements ActionListener {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "加载书籍失败：" + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Failed to load book：" + e.getMessage());
         }
     }
 
     private void loadBooks() {
-        loadBooks("", "全部");
+        loadBooks("", "all");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
-        if ("添加书籍".equals(actionCommand)) {
+        if ("Add a book".equals(actionCommand)) {
             showAddBookDialog();
-        } else if ("更新书籍".equals(actionCommand)) {
+        } else if ("Updated books".equals(actionCommand)) {
             updateBook();
-        } else if ("删除书籍".equals(actionCommand)) {
+        } else if ("Delete books".equals(actionCommand)) {
             deleteBook();
-        } else if ("搜索".equals(actionCommand)) {
+        } else if ("search".equals(actionCommand)) {
             performSearch();
         }
     }
@@ -152,33 +152,33 @@ public class BookManagementPanel extends JPanel implements ActionListener {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         AddBookDialog dialog = new AddBookDialog(frame);
         dialog.setVisible(true);
-        loadBooks(); // 刷新表格
-        loadCategories(); // 更新下拉框数据
+        loadBooks(); // Refresh Form
+        loadCategories(); // Update drop-down box data
     }
 
     private void deleteBook() {
         int selectedRow = bookTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "请选择要删除的书籍！");
+            JOptionPane.showMessageDialog(null, "Please select the books to be deleted！");
             return;
         }
 
         int id = (int) tableModel.getValueAt(selectedRow, 0);
 
-        int confirm = JOptionPane.showConfirmDialog(null, "确定要删除选中的书籍吗？", "确认删除", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected books?？", "Confirm deletion", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try (Connection conn = DatabaseConnection.getConnection();
                  PreparedStatement pstmt = conn.prepareStatement("DELETE FROM books WHERE id=?")) {
 
                 pstmt.setInt(1, id);
                 pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(null, "书籍删除成功！");
-                loadBooks(); // 刷新表格
-                loadCategories(); // 更新下拉框数据
+                JOptionPane.showMessageDialog(null, "Book deleted successfully！");
+                loadBooks(); // Refresh Form
+                loadCategories(); // Update drop-down box data
 
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "书籍删除失败：" + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Book Deletion Failure：" + ex.getMessage());
             }
         }
     }
@@ -186,23 +186,23 @@ public class BookManagementPanel extends JPanel implements ActionListener {
     private void updateBook() {
         int selectedRow = bookTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "请选择要更新的书籍！");
+            JOptionPane.showMessageDialog(null, "Please select the books to be updated！");
             return;
         }
 
         int bookId = (int) tableModel.getValueAt(selectedRow, 0);
 
-        // 可选：验证 bookId 是否存在
+        // Optional: verify that the bookId exists
         if (!isBookIdValid(bookId)) {
-            JOptionPane.showMessageDialog(null, "无效的书籍ID：" + bookId);
+            JOptionPane.showMessageDialog(null, "Invalid Book ID：" + bookId);
             return;
         }
 
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         UpdateBookDialog dialog = new UpdateBookDialog(frame, bookId);
         dialog.setVisible(true);
-        loadBooks(); // 刷新表格
-        loadCategories(); // 更新下拉框数据
+        loadBooks(); // Refresh Form
+        loadCategories(); // Update drop-down box data
     }
 
     private boolean isBookIdValid(int bookId) {

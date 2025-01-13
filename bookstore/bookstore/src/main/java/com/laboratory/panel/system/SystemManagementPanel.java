@@ -9,9 +9,9 @@ public class SystemManagementPanel extends JPanel {
     private JButton changePasswordButton;
     private JButton logoutButton;
     private MainFrame mainFrame;
-    private String userIdentifier; // 用户标识符（例如学号或教工号）
+    private String userIdentifier; // User identifier (e.g., student or faculty number)
 
-    // 构造函数需要接收 MainFrame 实例和用户标识符作为参数
+    // The constructor takes a MainFrame instance and a user identifier as arguments.
     public SystemManagementPanel(MainFrame mainFrame, String userIdentifier) {
         this.mainFrame = mainFrame;
         this.userIdentifier = userIdentifier;
@@ -23,35 +23,35 @@ public class SystemManagementPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.CENTER; // 添加这一行以确保组件居中
+        gbc.anchor = GridBagConstraints.CENTER; // Add this line to ensure that the component is centered
 
-        // 修改密码按钮
-        changePasswordButton = new JButton("修改密码");
-        changePasswordButton.setFont(new Font(null, Font.BOLD, 14)); // 使用系统默认字体
+        // Change Password button
+        changePasswordButton = new JButton("change your password");
+        changePasswordButton.setFont(new Font(null, Font.BOLD, 14)); // Use the system default font
         changePasswordButton.setBackground(Color.LIGHT_GRAY);
         changePasswordButton.addActionListener(e -> showChangePasswordDialog());
 
-        // 退出系统按钮
-        logoutButton = new JButton("退出系统");
-        logoutButton.setFont(new Font(null, Font.BOLD, 14)); // 使用系统默认字体
+        // Exit system button
+        logoutButton = new JButton("Log out of the system");
+        logoutButton.setFont(new Font(null, Font.BOLD, 14)); // Use the system default font
         logoutButton.setBackground(Color.LIGHT_GRAY);
         logoutButton.addActionListener(e -> mainFrame.logout());
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 1; // 明确设置 gridwidth
+        gbc.gridwidth = 1; // explicit setting gridwidth
         gbc.weightx = 1.0;
         add(changePasswordButton, gbc);
 
         gbc.gridy = 1;
-        gbc.gridwidth = 1; // 明确设置 gridwidth
+        gbc.gridwidth = 1; // explicit setting gridwidth
         add(logoutButton, gbc);
     }
 
     public void showChangePasswordDialog() {
-        // 确保 userIdentifier 在这里不是空的
-        System.out.println("User Identifier: " + userIdentifier); // 调试信息
-        ChangePasswordDialog dialog = new ChangePasswordDialog(mainFrame, "修改密码", true, userIdentifier);
+        // Make sure the userIdentifier is not null here.
+        System.out.println("User Identifier: " + userIdentifier); // Debugging Information
+        ChangePasswordDialog dialog = new ChangePasswordDialog(mainFrame, "change your password", true, userIdentifier);
         dialog.setVisible(true);
     }
 }

@@ -17,56 +17,56 @@ import java.util.regex.Pattern;
 public class RegisterPanel extends JPanel {
     private JTextField nameField;
     private JComboBox<String> identityComboBox;
-    private JTextField identifierField; // 身份号
+    private JTextField identifierField; // Identification number
     private JTextField phoneField;
     private JTextField emailField;
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
     private JButton registerButton;
-    private JButton backButton; // 新增返回按钮
+    private JButton backButton; // Added a back button
     private JLabel messageLabel;
     private MainFrame mainFrame;
 
     public RegisterPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-        setBackground(Color.decode("#f0f4f8")); // 设置背景色
+        setBackground(Color.decode("#f0f4f8")); // Set the background color
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 20, 10, 20); // 增加组件间距
+        gbc.insets = new Insets(10, 20, 10, 20); // Increase component spacing
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        Font globalFont = new Font("Microsoft YaHei", Font.PLAIN, 16); // 使用微软雅黑字体
+        Font globalFont = new Font("Microsoft YaHei", Font.PLAIN, 16); // Use Microsoft Yahei font
         Font titleFont = globalFont.deriveFont(Font.BOLD, 24);
 
-        JLabel titleLabel = new JLabel("用户注册", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("User Registration", SwingConstants.CENTER);
         titleLabel.setFont(titleFont);
         titleLabel.setForeground(Color.decode("#333333"));
 
-        JLabel nameLabel = createStyledLabel("姓名:");
+        JLabel nameLabel = createStyledLabel("name:");
         nameField = createStyledTextField();
 
-        JLabel identityLabel = createStyledLabel("身份:");
-        String[] identities = {"用户", "管理员"}; // 在这里添加了"管理员"
+        JLabel identityLabel = createStyledLabel("identity:");
+        String[] identities = {"user", "administrator"}; // Admin has been added here
         identityComboBox = createStyledComboBox(identities);
 
-        JLabel identifierLabel = createStyledLabel("身份号:"); // 身份号标签
-        identifierField = createStyledTextField();           // 身份号输入框
+        JLabel identifierLabel = createStyledLabel("Identification number:"); // Identification number label
+        identifierField = createStyledTextField();           // Identification number input box
 
-        JLabel phoneLabel = createStyledLabel("电话:");
+        JLabel phoneLabel = createStyledLabel("Phone:");
         phoneField = createStyledTextField();
 
-        JLabel emailLabel = createStyledLabel("邮箱:");
+        JLabel emailLabel = createStyledLabel("mailbox:");
         emailField = createStyledTextField();
 
-        JLabel passwordLabel = createStyledLabel("密码:");
+        JLabel passwordLabel = createStyledLabel("password:");
         passwordField = createStyledPasswordField();
 
-        JLabel confirmPasswordLabel = createStyledLabel("确认密码:");
+        JLabel confirmPasswordLabel = createStyledLabel("Confirm your password:");
         confirmPasswordField = createStyledPasswordField();
 
-        registerButton = createStyledButton("注册账号");
-        backButton = createStyledButton("返回登录"); // 创建返回按钮
+        registerButton = createStyledButton("Sign up for an account");
+        backButton = createStyledButton("Go back to sign in"); // Create a back button
         messageLabel = createStyledMessageLabel("");
 
         // Add components to the panel with increased height
@@ -78,7 +78,7 @@ public class RegisterPanel extends JPanel {
         int row = 1;
         addRow(gbc, nameLabel, nameField, row++);
         addRow(gbc, identityLabel, identityComboBox, row++);
-        addRow(gbc, identifierLabel, identifierField, row++); // 添加ID号行
+        addRow(gbc, identifierLabel, identifierField, row++); // Add the ID number line
         addRow(gbc, phoneLabel, phoneField, row++);
         addRow(gbc, emailLabel, emailField, row++);
         addRow(gbc, passwordLabel, passwordField, row++);
@@ -90,7 +90,7 @@ public class RegisterPanel extends JPanel {
         add(registerButton, gbc);
 
         gbc.gridy = row++;
-        add(backButton, gbc); // 添加返回按钮
+        add(backButton, gbc); // Add a back button
 
         gbc.gridy = row;
         gbc.gridwidth = 2;
@@ -101,10 +101,10 @@ public class RegisterPanel extends JPanel {
 
         // Add action listener to the back button
         backButton.addActionListener(e -> {
-            clearFields(); // 清空输入框的所有数据
+            clearFields(); // Clear all data in the input box
             CardLayout cl = (CardLayout)(getParent().getLayout());
             if (cl != null) {
-                cl.show(getParent(), "LOGIN_PANEL"); // 假设登录面板名为"LOGIN_PANEL"
+                cl.show(getParent(), "LOGIN_PANEL"); // Let's say the login panel is named "LOGIN_PANEL"
             }
         });
 
@@ -149,7 +149,7 @@ public class RegisterPanel extends JPanel {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
         label.setForeground(Color.RED);
-        label.setVisible(true); // 确保消息标签是可见的
+        label.setVisible(true); // Make sure the message label is visible
         return label;
     }
 
@@ -182,33 +182,33 @@ public class RegisterPanel extends JPanel {
     private class RegisterButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            clearMessage(); // 清除之前的任何消息
+            clearMessage(); // Clear any previous messages
 
             String name = nameField.getText().trim();
             String identity = (String) identityComboBox.getSelectedItem();
-            String identifier = identifierField.getText().trim(); // 获取身份号
+            String identifier = identifierField.getText().trim(); // Get an identity number
             String phone = phoneField.getText().trim();
             String email = emailField.getText().trim();
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
 
             if (name.isEmpty() || identity == null || identifier.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                setMessage("所有字段都是必填项！");
+                setMessage("All fields are mandatory!");
                 return;
             }
 
             if (!password.equals(confirmPassword)) {
-                setMessage("两次输入的密码不一致！");
+                setMessage("The password entered twice is inconsistent!");
                 return;
             }
 
             if (!validatePhone(phone)) {
-                setMessage("请输入有效的手机号码！");
+                setMessage("Please enter a valid mobile phone number!");
                 return;
             }
 
             if (!validateEmail(email)) {
-                setMessage("请输入有效的电子邮件地址！");
+                setMessage("Please enter a valid email address!");
                 return;
             }
 
@@ -220,7 +220,7 @@ public class RegisterPanel extends JPanel {
                     checkStmt.setString(2, name);
                     try (ResultSet rs = checkStmt.executeQuery()) {
                         if (rs.next() && rs.getInt(1) > 0) {
-                            setMessage("该身份号或姓名已存在，请选择其他ID号或姓名。");
+                            setMessage("The ID number or name already exists, please select a different ID number or name.");
                             return;
                         }
                     }
@@ -235,32 +235,32 @@ public class RegisterPanel extends JPanel {
                     pstmt.setString(3, identifier);
                     pstmt.setString(4, phone);
                     pstmt.setString(5, email);
-                    pstmt.setString(6, password); // 直接使用明文密码
+                    pstmt.setString(6, password); // Use plaintext passwords directly
 
                     int rowsAffected = pstmt.executeUpdate();
                     if (rowsAffected > 0) {
-                        JOptionPane.showMessageDialog(null, "注册成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
-                        clearFields(); // 清空输入框
+                        JOptionPane.showMessageDialog(null, "Registration Successful!", "prompt", JOptionPane.INFORMATION_MESSAGE);
+                        clearFields(); // Clear the input box
                         CardLayout cl = (CardLayout)(getParent().getLayout());
                         if (cl != null) {
-                            cl.show(getParent(), "LOGIN_PANEL"); // 假设登录面板名为"LOGIN_PANEL"
+                            cl.show(getParent(), "LOGIN_PANEL"); // Let's say the login panel is named "LOGIN_PANEL"
                         }
                     } else {
-                        setMessage("注册失败，请重试。");
+                        setMessage("Registration failed, please try again.");
                     }
                 }
             } catch (SQLException ex) {
-                setMessage("数据库错误，请稍后再试。");
+                setMessage("Database error, please try again later.");
                 ex.printStackTrace();
             }
 
-            messageLabel.repaint(); // 强制刷新界面
+            messageLabel.repaint(); // Force refresh of the interface
         }
 
         private void setMessage(final String message) {
             SwingUtilities.invokeLater(() -> {
                 messageLabel.setText(message);
-                messageLabel.setVisible(true); // 确保消息标签是可见的
+                messageLabel.setVisible(true); // Make sure the message label is visible
             });
         }
     }
@@ -268,7 +268,7 @@ public class RegisterPanel extends JPanel {
     private void clearFields() {
         nameField.setText("");
         identityComboBox.setSelectedIndex(0);
-        identifierField.setText(""); // 清空身份号输入框
+        identifierField.setText(""); // Clear the ID number entry box
         phoneField.setText("");
         emailField.setText("");
         passwordField.setText("");
@@ -278,7 +278,7 @@ public class RegisterPanel extends JPanel {
     private void clearMessage() {
         SwingUtilities.invokeLater(() -> {
             messageLabel.setText("");
-            messageLabel.setVisible(false); // 隐藏消息标签
+            messageLabel.setVisible(false); // Hide message labels
         });
     }
 }

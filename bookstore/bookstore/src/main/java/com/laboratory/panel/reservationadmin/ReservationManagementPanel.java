@@ -23,47 +23,47 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
 
     public ReservationManagementPanel() {
         initializeComponents();
-        loadEquipments(); // 加载设备列表并设置默认值
-        loadReservations(); // 加载所有预约数据
+        loadEquipments(); // Load device list and set defaults
+        loadReservations(); // Load all reservation data
     }
 
     private void initializeComponents() {
         setLayout(new BorderLayout());
 
-        // 初始化表格
+        // Initializing Forms
         tableModel = new DefaultTableModel(
-                new Object[]{"ID", "用户ID", "设备ID", "预约时间", "状态"}, 0);
+                new Object[]{"ID", "user ID", "Device ID", "Reservation time", "state of affairs"}, 0);
         reservationTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(reservationTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 搜索面板
+        // search panel
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        searchPanel.add(new JLabel("用户ID:"));
+        searchPanel.add(new JLabel("user ID:"));
         userSearchField = new JTextField(15);
         searchPanel.add(userSearchField);
 
-        searchPanel.add(new JLabel("设备ID:"));
+        searchPanel.add(new JLabel("Device ID:"));
         equipmentSearchBox = new JComboBox<>();
         searchPanel.add(equipmentSearchBox);
 
-        searchPanel.add(new JLabel("状态:"));
-        statusSearchBox = new JComboBox<>(new String[]{"全部", "待确认", "已确认", "已完成", "已取消"});
+        searchPanel.add(new JLabel("state of affairs:"));
+        statusSearchBox = new JComboBox<>(new String[]{"full", "To be confirmed", "confirmed", "done", "Cancelled"});
         searchPanel.add(statusSearchBox);
 
-        searchButton = new JButton("搜索");
+        searchButton = new JButton("look for sth.");
         searchButton.addActionListener(this);
         searchPanel.add(searchButton);
 
         add(searchPanel, BorderLayout.NORTH);
 
-        // 按钮面板
+        // pushbutton panel
         JPanel buttonPanel = new JPanel();
-        addButton = new JButton("添加预约");
-        updateButton = new JButton("更新预约");
-        deleteButton = new JButton("删除预约");
+        addButton = new JButton("Add Appointment");
+        updateButton = new JButton("Update Appointment");
+        deleteButton = new JButton("Delete Appointment");
 
         addButton.addActionListener(this);
         updateButton.addActionListener(this);
@@ -82,23 +82,23 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
             ResultSet rs = pstmt.executeQuery();
 
             Set<Integer> equipmentIds = new HashSet<>();
-            equipmentIds.add(0); // 保留用于后续逻辑判断
+            equipmentIds.add(0); // Reserved for subsequent logical judgment
 
             while (rs.next()) {
                 equipmentIds.add(rs.getInt("id"));
             }
 
-            // 创建一个包含 "全部" 的数组，并设置给 JComboBox
+            // Create an array containing "All" and set it to the JComboBox
             String[] equipmentOptions = equipmentIds.stream()
                     .sorted()
-                    .map(id -> id == 0 ? "全部" : String.valueOf(id))
+                    .map(id -> id == 0 ? "full" : String.valueOf(id))
                     .toArray(String[]::new);
 
             equipmentSearchBox.setModel(new DefaultComboBoxModel<>(equipmentOptions));
-            equipmentSearchBox.setSelectedItem("全部"); // 默认选择 "全部"
+            equipmentSearchBox.setSelectedItem("full"); // "All" is selected by default
 
         } catch (SQLException e) {
-            handleException("加载设备失败", e);
+            handleException("Failed to load device", e);
         }
     }
 
@@ -109,10 +109,10 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
             if (!userId.isEmpty()) {
                 queryBuilder.append(" AND user_id LIKE ?");
             }
-            if (equipmentId != null) { // 只有当 equipmentId 不为 null 时才添加过滤条件
+            if (equipmentId != null) { // Add filter only if equipmentId is not null
                 queryBuilder.append(" AND equipment_id = ?");
             }
-            if (!"全部".equals(status)) {
+            if (!"full".equals(status)) {
                 queryBuilder.append(" AND status = ?");
             }
 
@@ -122,15 +122,15 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
             if (!userId.isEmpty()) {
                 pstmt.setString(parameterIndex++, "%" + userId + "%");
             }
-            if (equipmentId != null) { // 只有当 equipmentId 不为 null 时才设置参数值
+            if (equipmentId != null) { // Set parameter value only if equipmentId is not null
                 pstmt.setInt(parameterIndex++, equipmentId);
             }
-            if (!"全部".equals(status)) {
+            if (!"full".equals(status)) {
                 pstmt.setString(parameterIndex++, status);
             }
 
             ResultSet rs = pstmt.executeQuery();
-            tableModel.setRowCount(0); // 清空现有数据
+            tableModel.setRowCount(0); // Emptying existing data
             while (rs.next()) {
                 tableModel.addRow(new Object[]{
                         rs.getInt("id"),
@@ -141,12 +141,12 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
                 });
             }
         } catch (SQLException e) {
-            handleException("加载预约失败", e);
+            handleException("Failed to load reservation", e);
         }
     }
 
     private void loadReservations() {
-        loadReservations("", null, "全部"); // 使用 null 表示不限制设备ID
+        loadReservations("", null, "full"); // Use null to indicate that the device ID is not restricted
     }
 
     @Override
@@ -154,16 +154,16 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
         String actionCommand = e.getActionCommand();
 
         switch (actionCommand) {
-            case "添加预约":
+            case "Add Appointment":
                 showAddReservationDialog();
                 break;
-            case "更新预约":
+            case "Update AppointmentUpdate Appointment":
                 updateReservation();
                 break;
-            case "删除预约":
+            case "Delete Appointment":
                 deleteReservation();
                 break;
-            case "搜索":
+            case "look for sth.":
                 performSearch();
                 break;
         }
@@ -173,44 +173,44 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         AddReservationDialog dialog = new AddReservationDialog(frame);
         dialog.setVisible(true);
-        loadReservations(); // 刷新表格
+        loadReservations(); // Refresh Form
     }
 
     private void deleteReservation() {
         int selectedRow = reservationTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "请选择要删除的预约！");
+            JOptionPane.showMessageDialog(null, "Please select the appointments to be deleted！");
             return;
         }
 
         int id = (int) tableModel.getValueAt(selectedRow, 0);
 
-        int confirm = JOptionPane.showConfirmDialog(null, "确定要删除选中的预约吗？", "确认删除", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected appointments？", "Confirm deletion", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             executeDatabaseOperation("DELETE FROM reservations WHERE id=?", id);
-            JOptionPane.showMessageDialog(null, "预约删除成功！");
-            loadReservations(); // 刷新表格
+            JOptionPane.showMessageDialog(null, "Appointment deleted successfully！");
+            loadReservations(); // Refresh Form
         }
     }
 
     private void updateReservation() {
         int selectedRow = reservationTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "请选择要更新的预约！");
+            JOptionPane.showMessageDialog(null, "Please select the appointment to update！");
             return;
         }
 
         int reservationId = (int) tableModel.getValueAt(selectedRow, 0);
 
         if (!isReservationIdValid(reservationId)) {
-            JOptionPane.showMessageDialog(null, "无效的预约ID：" + reservationId);
+            JOptionPane.showMessageDialog(null, "Invalid Reservation ID：" + reservationId);
             return;
         }
 
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         UpdateReservationDialog dialog = new UpdateReservationDialog(frame, reservationId);
         dialog.setVisible(true);
-        loadReservations(); // 刷新表格
+        loadReservations(); // Refresh Form
     }
 
     private boolean isReservationIdValid(int reservationId) {
@@ -221,7 +221,7 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
             ResultSet rs = pstmt.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         } catch (SQLException ex) {
-            handleException("验证预约ID时出错", ex);
+            handleException("Error while verifying reservation ID", ex);
             return false;
         }
     }
@@ -229,7 +229,7 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
     private void performSearch() {
         String userId = userSearchField.getText().trim();
         String selectedEquipment = (String) equipmentSearchBox.getSelectedItem();
-        Integer equipmentId = "全部".equals(selectedEquipment) ? null : Integer.parseInt(selectedEquipment); // 如果是 "全部" 则使用 null 表示不限制设备ID
+        Integer equipmentId = "full".equals(selectedEquipment) ? null : Integer.parseInt(selectedEquipment); // If "all" then use null to not limit device IDs
         String status = (String) statusSearchBox.getSelectedItem();
         loadReservations(userId, equipmentId, status);
     }
@@ -249,7 +249,7 @@ public class ReservationManagementPanel extends JPanel implements ActionListener
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            handleException("数据库操作失败", e);
+            handleException("Database operation failed", e);
         }
     }
 }

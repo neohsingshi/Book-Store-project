@@ -16,33 +16,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UpdateReservationDialog extends JDialog implements ActionListener {
-    private JComboBox<String> userIdBox; // 用户标识符选择框
+    private JComboBox<String> userIdBox; // User identifier selection box
     private JComboBox<Integer> equipmentIdBox;
     private JSpinner reservationTimeSpinner;
     private JComboBox<String> statusBox;
     private JTextArea notesArea;
-    private JSpinner durationSpinner; // 预约时长
+    private JSpinner durationSpinner; // Appointment length
     private int reservationId;
 
-    private Map<String, Integer> userMap = new HashMap<>(); // 映射用户标识符到用户ID
+    private Map<String, Integer> userMap = new HashMap<>(); // Mapping user identifiers to user IDs
 
     public UpdateReservationDialog(JFrame owner, int reservationId) {
-        super(owner, "更新预约", true);
+        super(owner, "Update Appointment", true);
         this.reservationId = reservationId;
 
         initUI();
-        loadUsers(); // 加载用户列表
-        loadEquipments(); // 加载设备列表
-        loadReservationDetails(); // 加载现有预约信息
+        loadUsers(); // Load User List
+        loadEquipments(); // Load Device List
+        loadReservationDetails(); // Loading Existing Reservation Information
 
-        setResizable(false); // 禁止调整大小
+        setResizable(false); // Disable resizing
         setLocationRelativeTo(owner);
     }
 
     private void initUI() {
         Font globalFont = new Font("Arial", Font.PLAIN, 14);
 
-        // 初始化组件
+        // Initializing components
         userIdBox = new JComboBox<>();
         equipmentIdBox = new JComboBox<>();
 
@@ -50,47 +50,47 @@ public class UpdateReservationDialog extends JDialog implements ActionListener {
         reservationTimeSpinner.setEditor(new JSpinner.DateEditor(reservationTimeSpinner, "yyyy-MM-dd HH:mm"));
         ((JSpinner.DefaultEditor) reservationTimeSpinner.getEditor()).getTextField().setEditable(false);
 
-        statusBox = new JComboBox<>(new String[]{"待确认", "已确认", "已完成", "已取消"});
+        statusBox = new JComboBox<>(new String[]{"To be confirmed", "confirmed", "Completed", "Canceled"});
         notesArea = new JTextArea(5, 20);
         notesArea.setFont(globalFont);
         notesArea.setLineWrap(true);
         notesArea.setWrapStyleWord(true);
 
-        durationSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 24, 1)); // 默认值1小时，最小值1小时，最大值24小时，步长1小时
+        durationSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 24, 1)); // Default value 1 hour, minimum value 1 hour, maximum value 24 hours, step size 1 hours.
         ((JSpinner.DefaultEditor) durationSpinner.getEditor()).getTextField().setEditable(false);
 
-        // 创建并设置面板
+        // Creating and setting up panels
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // 预约详情区
-        JPanel reservationDetailsPanel = createTitledPanel("预约详情", new GridLayout(6, 2, 10, 10));
-        reservationDetailsPanel.add(new JLabel("用户:", SwingConstants.RIGHT));
+        // Reservation Details Area
+        JPanel reservationDetailsPanel = createTitledPanel("Reservation Details", new GridLayout(6, 2, 10, 10));
+        reservationDetailsPanel.add(new JLabel("subscribers:", SwingConstants.RIGHT));
         reservationDetailsPanel.add(userIdBox);
-        reservationDetailsPanel.add(new JLabel("设备ID:", SwingConstants.RIGHT));
+        reservationDetailsPanel.add(new JLabel("Device ID:", SwingConstants.RIGHT));
         reservationDetailsPanel.add(equipmentIdBox);
-        reservationDetailsPanel.add(new JLabel("预约时间:", SwingConstants.RIGHT));
+        reservationDetailsPanel.add(new JLabel("Reservation Time:", SwingConstants.RIGHT));
         reservationDetailsPanel.add(reservationTimeSpinner);
-        reservationDetailsPanel.add(new JLabel("预约时长（小时）:", SwingConstants.RIGHT));
+        reservationDetailsPanel.add(new JLabel("Length of appointment (hours):", SwingConstants.RIGHT));
         reservationDetailsPanel.add(durationSpinner);
-        reservationDetailsPanel.add(new JLabel("状态:", SwingConstants.RIGHT));
+        reservationDetailsPanel.add(new JLabel("state of affairs:", SwingConstants.RIGHT));
         reservationDetailsPanel.add(statusBox);
-        reservationDetailsPanel.add(new JLabel("备注:", SwingConstants.RIGHT));
+        reservationDetailsPanel.add(new JLabel("note:", SwingConstants.RIGHT));
         reservationDetailsPanel.add(new JScrollPane(notesArea));
 
-        // 按钮区
+        // button area
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton updateButton = new JButton("更新");
-        JButton cancelButton = new JButton("取消");
+        JButton updateButton = new JButton("update");
+        JButton cancelButton = new JButton("abolish");
         updateButton.addActionListener(this);
         cancelButton.addActionListener(e -> dispose());
 
         buttonPanel.add(updateButton);
         buttonPanel.add(cancelButton);
 
-        // 添加到主面板
+        // Add to main panel
         addComponent(panel, gbc, reservationDetailsPanel, 0, 0, 2, 1);
         addComponent(panel, gbc, buttonPanel, 0, 1, 2, 1, 1.0, 1.0);
 
@@ -138,7 +138,7 @@ public class UpdateReservationDialog extends JDialog implements ActionListener {
                 userIdBox.addItem(userName);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "加载用户失败：" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to load user：" + e.getMessage(), "incorrect", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -151,7 +151,7 @@ public class UpdateReservationDialog extends JDialog implements ActionListener {
                 equipmentIdBox.addItem(rs.getInt("id"));
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "加载设备失败：" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to load device：" + e.getMessage(), "incorrect", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -175,24 +175,24 @@ public class UpdateReservationDialog extends JDialog implements ActionListener {
                 statusBox.setSelectedItem(rs.getString("status"));
                 notesArea.setText(rs.getString("notes"));
             } else {
-                JOptionPane.showMessageDialog(this, "未找到预约记录！");
+                JOptionPane.showMessageDialog(this, "Appointment not found！");
                 dispose();
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "加载预约信息失败：" + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Failed to load reservation information：" + e.getMessage());
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if ("更新".equals(e.getActionCommand())) {
-            // 输入验证
+        if ("update".equals(e.getActionCommand())) {
+            // input validation
             if (userIdBox.getSelectedItem() == null ||
                     equipmentIdBox.getSelectedItem() == null ||
                     reservationTimeSpinner.getValue() == null ||
                     statusBox.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(this, "请确保所有必填项均已填写！", "输入错误", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please make sure all required fields are filled in！", "input error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -200,7 +200,7 @@ public class UpdateReservationDialog extends JDialog implements ActionListener {
                 String selectedUserName = (String) userIdBox.getSelectedItem();
                 Integer userId = userMap.get(selectedUserName);
                 if (userId == null) {
-                    JOptionPane.showMessageDialog(this, "提供的用户不存在，请选择有效的用户。", "输入错误", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "The user provided does not exist, please select a valid user。", "input error", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
@@ -208,15 +208,15 @@ public class UpdateReservationDialog extends JDialog implements ActionListener {
                 Date reservationTime = (Date) reservationTimeSpinner.getValue();
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
-                // 检查预约时间是否在允许的时间段内
+                // Check that the appointment time is within the allowed time period
                 if (!isWithinAllowedTime(reservationTime)) {
-                    JOptionPane.showMessageDialog(this, "预约时间不在允许的时间段内（9:00-21:00）。", "时间错误", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Appointment time is not within the allowed time period（9:00-21:00）。", "timing error", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
-                // 检查是否有冲突的预约
+                // Check for conflicting appointments
                 if (isConflictingReservation(conn, equipmentId, reservationTime, durationSpinner.getValue())) {
-                    JOptionPane.showMessageDialog(this, "该时间段内已有预约，请选择其他时间。", "预约冲突", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "There is already an appointment in this time slot, please choose another time。", "Reservation Conflicts", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
@@ -236,14 +236,14 @@ public class UpdateReservationDialog extends JDialog implements ActionListener {
 
                 int rowsAffected = pstmt.executeUpdate();
                 if (rowsAffected > 0) {
-                    JOptionPane.showMessageDialog(this, "预约更新成功！");
-                    dispose(); // 关闭对话框
+                    JOptionPane.showMessageDialog(this, "Reservation Update Success！");
+                    dispose(); // Close dialog box
                 } else {
-                    JOptionPane.showMessageDialog(this, "预约更新失败！");
+                    JOptionPane.showMessageDialog(this, "Appointment Update Failure！");
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "预约更新失败：" + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Appointment Update Failure：" + ex.getMessage());
             }
         }
     }

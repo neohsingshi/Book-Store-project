@@ -21,7 +21,7 @@ public class BookManagementPanel extends JPanel {
         this.shoppingCartPanel = shoppingCartPanel;
         setLayout(new BorderLayout());
 
-        // 初始化表格
+        // Initializing Forms
         tableModel = new DefaultTableModel(new Object[]{"ID", "书名", "价格", "库存"}, 0);
         bookTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(bookTable);

@@ -19,23 +19,23 @@ public class UserMainPanel extends JPanel {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        // 创建书籍管理面板（暂时不传入shoppingCartPanel）
+        // Create a book admin panel (don't pass in shoppingCartPanel for the time being)
         BookManagementPanel bookManagementPanel = null;
 
-        // 创建购物车面板，并将 booksManagementPanel 设置为null
+        // Create a shopping cart panel and set the booksManagementPanel to null
         ShoppingCartPanel shoppingCartPanel = new ShoppingCartPanel(mainFrame, userIdentifier, null);
 
-        // 更新书籍管理面板以包含对 shoppingCartPanel 的引用
+        // Update the book admin panel to include references to shoppingCartPanel
         bookManagementPanel = new BookManagementPanel(shoppingCartPanel);
 
-        // 添加购物车面板
-        tabbedPane.addTab("购物车", shoppingCartPanel);
+        // Add a shopping cart panel
+        tabbedPane.addTab("Shopping cart", shoppingCartPanel);
 
-        // 添加系统管理面板
-        tabbedPane.addTab("系统管理", createSystemManagementPanel());
+        // Add a system admin panel
+        tabbedPane.addTab("System administration", createSystemManagementPanel());
 
-        // 添加书籍管理面板
-        tabbedPane.addTab("书籍浏览", bookManagementPanel);
+        // Add a book admin panel
+        tabbedPane.addTab("Book browsing", bookManagementPanel);
 
         add(tabbedPane, BorderLayout.CENTER);
     }

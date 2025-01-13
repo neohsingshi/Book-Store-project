@@ -25,7 +25,7 @@ public class AddBookDialog extends JDialog {
     private void initUI() {
         setLayout(new GridLayout(5, 2));
 
-        add(new JLabel("reputation as calligrapher:"));
+        add(new JLabel("stock:"));
         titleField = new JTextField();
         add(titleField);
 

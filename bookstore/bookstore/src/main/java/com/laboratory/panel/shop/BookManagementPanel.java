@@ -22,13 +22,13 @@ public class BookManagementPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Initializing Forms
-        tableModel = new DefaultTableModel(new Object[]{"ID", "书名", "价格", "库存"}, 0);
+        tableModel = new DefaultTableModel(new Object[]{"ID", "reputation as calligrapher", "prices", "property or cash held in reserve"}, 0);
         bookTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(bookTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 添加按钮
-        JButton addButton = new JButton("加入购物车");
+        // Add button
+        JButton addButton = new JButton("Add to cart");
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -40,23 +40,23 @@ public class BookManagementPanel extends JPanel {
 
                     onBookSelected(bookId, title, price);
                 } else {
-                    JOptionPane.showMessageDialog(null, "请选择一本书！");
+                    JOptionPane.showMessageDialog(null, "Please select a book！");
                 }
             }
         });
         add(addButton, BorderLayout.SOUTH);
 
-        // 设置定时器，每5秒刷新一次数据
-        Timer timer = new Timer(5000, new ActionListener() { // 每5秒刷新一次
+        // Set a timer to refresh the data every 5 seconds
+        Timer timer = new Timer(5000, new ActionListener() { // Refresh every 5 seconds
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadBooks();
             }
         });
-        timer.setInitialDelay(0); // 立即开始第一次刷新
+        timer.setInitialDelay(0); // Start the first refresh immediately
         timer.start();
 
-        // 初始加载书籍数据
+        // Initial loading of book data
         loadBooks();
     }
 
@@ -66,7 +66,7 @@ public class BookManagementPanel extends JPanel {
 
             ResultSet rs = pstmt.executeQuery();
 
-            // 清空表格中的旧数据
+            // Emptying old data from a table
             tableModel.setRowCount(0);
 
             while (rs.next()) {
@@ -79,7 +79,7 @@ public class BookManagementPanel extends JPanel {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "加载书籍失败：" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to load book：" + ex.getMessage(), "incorrect", JOptionPane.ERROR_MESSAGE);
         }
     }
 

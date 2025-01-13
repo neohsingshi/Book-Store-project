@@ -10,25 +10,25 @@ import java.awt.*;
 
 public class AdminMainPanel extends JPanel {
     private MainFrame mainFrame;
-    private String userIdentifier; // 用户标识符（例如学号或教工号）
+    private String userIdentifier; // User identifier (e.g., student ID or faculty ID)
 
-    // 构造函数需要接收 MainFrame 实例和用户标识符作为参数
+    // The constructor needs to receive a MainFrame instance and a user identifier as parameters
     public AdminMainPanel(MainFrame mainFrame, String userIdentifier) {
         this.mainFrame = mainFrame;
         this.userIdentifier = userIdentifier;
         setLayout(new BorderLayout());
 
-        // 创建一个选项卡面板，用于分隔不同的管理功能
+        // Create a tab panel that separates the different management functions
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        // 用户管理
-        tabbedPane.addTab("用户管理", new UserManagementPanel());
+        // User management
+        tabbedPane.addTab("User management", new UserManagementPanel());
 
-        // 书籍管理
-        tabbedPane.addTab("书籍管理", new BookManagementPanel());
+        // Book management
+        tabbedPane.addTab("Book management", new BookManagementPanel());
 
-        // 系统管理
-        tabbedPane.addTab("系统管理", new SystemManagementPanel(mainFrame, userIdentifier)); // 传递 mainFrame 和 userIdentifier 给 SystemManagementPanel
+        // System administration
+        tabbedPane.addTab("System administration", new SystemManagementPanel(mainFrame, userIdentifier)); // 传递 mainFrame 和 userIdentifier 给 SystemManagementPanel
 
 
 

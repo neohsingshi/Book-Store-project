@@ -16,7 +16,7 @@ public class AddBookDialog extends JDialog {
     private JComboBox<String> categoryBox;
 
     public AddBookDialog(JFrame owner) {
-        super(owner, "添加书籍", true);
+        super(owner, "Add a book", true);
         initUI();
         pack();
         setLocationRelativeTo(owner);
@@ -25,27 +25,27 @@ public class AddBookDialog extends JDialog {
     private void initUI() {
         setLayout(new GridLayout(5, 2));
 
-        add(new JLabel("书名:"));
+        add(new JLabel("reputation as calligrapher:"));
         titleField = new JTextField();
         add(titleField);
 
-        add(new JLabel("价格:"));
+        add(new JLabel("prices:"));
         priceField = new JTextField();
         add(priceField);
 
-        add(new JLabel("库存:"));
+        add(new JLabel("property or cash held in reserve:"));
         stockField = new JTextField();
         add(stockField);
 
-        add(new JLabel("类别:"));
-        categoryBox = new JComboBox<>(new String[]{"小说", "科幻", "历史", "编程", "其他"}); // 示例类别
+        add(new JLabel("form:"));
+        categoryBox = new JComboBox<>(new String[]{"fiction", "sci-fi", "histories", "programmer", "else"}); // 示例类别
         add(categoryBox);
 
-        JButton okButton = new JButton("确定");
+        JButton okButton = new JButton("ok");
         okButton.addActionListener(this::onOK);
         add(okButton);
 
-        JButton cancelButton = new JButton("取消");
+        JButton cancelButton = new JButton("cancel");
         cancelButton.addActionListener(e -> dispose());
         add(cancelButton);
     }
@@ -59,11 +59,11 @@ public class AddBookDialog extends JDialog {
                 pstmt.setInt(3, Integer.parseInt(stockField.getText()));
                 pstmt.setString(4, (String) categoryBox.getSelectedItem());
                 pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(this, "书籍添加成功！");
+                JOptionPane.showMessageDialog(this, "Book added successfully！");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "添加失败：" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Add Failure：" + ex.getMessage(), "incorrect", JOptionPane.ERROR_MESSAGE);
         } finally {
             dispose();
         }

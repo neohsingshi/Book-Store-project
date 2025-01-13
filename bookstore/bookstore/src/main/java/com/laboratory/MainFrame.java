@@ -14,66 +14,66 @@ import java.util.Map;
 public class MainFrame extends JFrame {
     private CardLayout cardLayout;
     private JPanel cards;
-    private String userIdentifier; // 用户标识符（例如学号或教工号）
+    private String userIdentifier; // User identifier (e.g., student ID or faculty ID)
 
-    // 定义面板名称常量
+    // Defines the panel name constant
     private static final String LOGIN_PANEL = "LOGIN_PANEL";
     private static final String REGISTER_PANEL = "REGISTER_PANEL";
     private static final String ADMIN_MAIN_PANEL = "ADMIN_MAIN_PANEL";
     private static final String USER_MAIN_PANEL = "USER_MAIN_PANEL";
-    private static final String SYSTEM_MANAGEMENT_PANEL = "SYSTEM_MANAGEMENT_PANEL"; // 新增系统管理面板标识
+    private static final String SYSTEM_MANAGEMENT_PANEL = "SYSTEM_MANAGEMENT_PANEL"; // Added the system management panel logo
 
-    // 使用 Map 来存储面板
+    // Use Map to store panels
     private final Map<String, JPanel> panelMap = new HashMap<>();
 
-    // 构造函数初始化主窗口和布局管理器
+    // The constructor initializes the main window and layout manager
     public MainFrame() {
-        setTitle("图书商店");  // 设置窗口标题
-        setSize(800, 600);  // 设置窗口大小
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // 关闭时退出程序
+        setTitle("图书商店");  // Set the window title
+        setSize(800, 600);  // Set the window size
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Exit the program when closing
 
-        // 初始化CardLayout和容器，用于管理不同面板
+        // Initialize the CardLayout and container to manage different panels
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout);
 
-        // 添加登录面板到容器中
+        // Add the login panel to the container
         LoginPanel loginPanel = new LoginPanel(this);
         panelMap.put(LOGIN_PANEL, loginPanel);
         cards.add(loginPanel, LOGIN_PANEL);
 
-        // 添加注册面板到容器中
-        RegisterPanel registerPanel = new RegisterPanel(this);  // 将 this 作为参数传递
+        //  Add the registration panel to the container
+        RegisterPanel registerPanel = new RegisterPanel(this);  // Pass this as a parameter
         panelMap.put(REGISTER_PANEL, registerPanel);
         cards.add(registerPanel, REGISTER_PANEL);
 
-        setContentPane(cards);  // 设置内容面板
-        cardLayout.show(cards, LOGIN_PANEL);  // 设置初始显示的面板为登录面板
+        setContentPane(cards);  // Set up the content panel
+        cardLayout.show(cards, LOGIN_PANEL);  // Set the initial display panel to the login panel
     }
 
-    // 显示系统管理面板的方法
+    // How to display the system management panel
     public void showSystemManagementPanel(String userIdentifier) {
-        // 创建系统管理面板实例时传递 userIdentifier
+        // Pass the userIdentifier when you create an instance of the System Administration Panel
         SystemManagementPanel systemManagementPanel = new SystemManagementPanel(this, userIdentifier);
         panelMap.put(SYSTEM_MANAGEMENT_PANEL, systemManagementPanel);
         cards.add(systemManagementPanel, SYSTEM_MANAGEMENT_PANEL);
         cardLayout.show(cards, SYSTEM_MANAGEMENT_PANEL);
     }
 
-    // 退出系统的方法
+    // How to exit the system
     public void logout() {
-        int confirm = JOptionPane.showConfirmDialog(null, "确定要退出系统吗？", "确认退出", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out of the system?", "Confirm the exit", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
 
     public void showMainPanel(String role, String userIdentifier) {
-        this.userIdentifier = userIdentifier; // 确保在此处正确设置了 userIdentifier
-        System.out.println("Setting Main Frame User Identifier: " + this.userIdentifier); // 调试信息
+        this.userIdentifier = userIdentifier; // Make sure the userIdentifier is set correctly here
+        System.out.println("Setting Main Frame User Identifier: " + this.userIdentifier); // Debugging information
 
         String panelName;
         switch (role) {
-            case "管理员":
+            case "administrator":
                 panelName = ADMIN_MAIN_PANEL;
                 break;
             default:
@@ -81,7 +81,7 @@ public class MainFrame extends JFrame {
                 break;
         }
 
-        // 检查是否已存在该面板，如果不存在则创建并添加
+        // Check if the panel already exists, and if it doesn't, create and add it
         if (!panelMap.containsKey(panelName)) {
             switch (panelName) {
                 case ADMIN_MAIN_PANEL:
@@ -97,13 +97,13 @@ public class MainFrame extends JFrame {
             }
         }
 
-        cardLayout.show(cards, panelName);  // 切换到相应的主界面
+        cardLayout.show(cards, panelName);  // Switch to the corresponding main interface
     }
 
-    // 主方法，启动应用程序
+    // The main method to launch the application
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MainFrame().setVisible(true);  // 创建并显示主窗口
+            new MainFrame().setVisible(true);  // Create and display the main window
         });
     }
 }

@@ -22,39 +22,39 @@ public class UserManagementPanel extends JPanel implements ActionListener {
     public UserManagementPanel() {
         setLayout(new BorderLayout());
 
-        // 初始化表格
-        tableModel = new DefaultTableModel(new Object[]{"ID", "姓名", "性别", "年龄", "身份", "ID号", "电话", "邮箱"}, 0);
+        // Initialize table
+        tableModel = new DefaultTableModel(new Object[]{"ID", "Name", "Gender", "Age", "Identity", "ID Number", "Phone", "Email"}, 0);
         userTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(userTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 搜索面板
+        // Search panel
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        searchPanel.add(new JLabel("姓名:"));
+        searchPanel.add(new JLabel("Name:"));
         nameSearchField = new JTextField(15);
         searchPanel.add(nameSearchField);
 
-        searchPanel.add(new JLabel("性别:"));
-        genderSearchBox = new JComboBox<>(new String[]{"全部", "男", "女"});
+        searchPanel.add(new JLabel("Gender:"));
+        genderSearchBox = new JComboBox<>(new String[]{"All", "Male", "Female"});
         searchPanel.add(genderSearchBox);
 
-        searchPanel.add(new JLabel("身份:"));
-        identitySearchBox = new JComboBox<>(new String[]{"全部", "教师", "本科生", "研究生", "校外人员", "管理员"});
+        searchPanel.add(new JLabel("Identity:"));
+        identitySearchBox = new JComboBox<>(new String[]{"All", "Teacher", "Undergraduate", "Graduate", "External Personnel", "Administrator"});
         searchPanel.add(identitySearchBox);
 
-        searchButton = new JButton("搜索");
+        searchButton = new JButton("Search");
         searchButton.addActionListener(this);
         searchPanel.add(searchButton);
 
         add(searchPanel, BorderLayout.NORTH);
 
-        // 按钮面板
+        // Button panel
         JPanel buttonPanel = new JPanel();
-        addButton = new JButton("添加用户");
-        updateButton = new JButton("更新用户");
-        deleteButton = new JButton("删除用户");
+        addButton = new JButton("Add User");
+        updateButton = new JButton("Update User");
+        deleteButton = new JButton("Delete User");
 
         addButton.addActionListener(this);
         updateButton.addActionListener(this);
@@ -66,10 +66,10 @@ public class UserManagementPanel extends JPanel implements ActionListener {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        loadUsers(); // 加载所有用户数据
+        loadUsers(); // Load all user data
     }
 
-    // 保持原有的 loadUsers 方法不变，它接受三个参数用于搜索条件
+    // The loadUsers method with parameters for search conditions
     private void loadUsers(String name, String gender, String identity) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             StringBuilder queryBuilder = new StringBuilder("SELECT * FROM users WHERE 1=1");
@@ -77,10 +77,10 @@ public class UserManagementPanel extends JPanel implements ActionListener {
             if (!name.isEmpty()) {
                 queryBuilder.append(" AND name LIKE ?");
             }
-            if (!"全部".equals(gender)) {
+            if (!"All".equals(gender)) {
                 queryBuilder.append(" AND gender = ?");
             }
-            if (!"全部".equals(identity)) {
+            if (!"All".equals(identity)) {
                 queryBuilder.append(" AND identity = ?");
             }
 
@@ -90,15 +90,15 @@ public class UserManagementPanel extends JPanel implements ActionListener {
             if (!name.isEmpty()) {
                 pstmt.setString(parameterIndex++, "%" + name + "%");
             }
-            if (!"全部".equals(gender)) {
+            if (!"All".equals(gender)) {
                 pstmt.setString(parameterIndex++, gender);
             }
-            if (!"全部".equals(identity)) {
+            if (!"All".equals(identity)) {
                 pstmt.setString(parameterIndex++, identity);
             }
 
             ResultSet rs = pstmt.executeQuery();
-            tableModel.setRowCount(0); // 清空现有数据
+            tableModel.setRowCount(0); // Clear current data
             while (rs.next()) {
                 tableModel.addRow(new Object[]{
                         rs.getInt("id"),
@@ -113,27 +113,27 @@ public class UserManagementPanel extends JPanel implements ActionListener {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "加载用户失败：" + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Failed to load users: " + e.getMessage());
         }
     }
 
-    // 添加一个新的无参 loadUsers 方法，用于加载所有用户
+    // The default loadUsers method to load all users
     private void loadUsers() {
-        // 调用带参数的 loadUsers 方法，并传入默认值
-        loadUsers("", "全部", "全部");
+        // Call the loadUsers method with default values
+        loadUsers("", "All", "All");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
-        if ("添加用户".equals(actionCommand)) {
+        if ("Add User".equals(actionCommand)) {
             showAddUserDialog();
-        } else if ("更新用户".equals(actionCommand)) {
+        } else if ("Update User".equals(actionCommand)) {
             updateUser();
-        } else if ("删除用户".equals(actionCommand)) {
+        } else if ("Delete User".equals(actionCommand)) {
             deleteUser();
-        } else if ("搜索".equals(actionCommand)) {
+        } else if ("Search".equals(actionCommand)) {
             performSearch();
         }
     }
@@ -142,31 +142,31 @@ public class UserManagementPanel extends JPanel implements ActionListener {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         AddUserDialog dialog = new AddUserDialog(frame);
         dialog.setVisible(true);
-        loadUsers(); // 刷新表格
+        loadUsers(); // Refresh the table
     }
 
     private void deleteUser() {
         int selectedRow = userTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "请选择要删除的用户！");
+            JOptionPane.showMessageDialog(null, "Please select a user to delete!");
             return;
         }
 
         int id = (int) tableModel.getValueAt(selectedRow, 0);
 
-        int confirm = JOptionPane.showConfirmDialog(null, "确定要删除选中的用户吗？", "确认删除", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected user?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try (Connection conn = DatabaseConnection.getConnection();
                  PreparedStatement pstmt = conn.prepareStatement("DELETE FROM users WHERE id=?")) {
 
                 pstmt.setInt(1, id);
                 pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(null, "用户删除成功！");
-                loadUsers(); // 刷新表格
+                JOptionPane.showMessageDialog(null, "User deleted successfully!");
+                loadUsers(); // Refresh the table
 
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "用户删除失败：" + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Failed to delete user: " + ex.getMessage());
             }
         }
     }
@@ -174,7 +174,7 @@ public class UserManagementPanel extends JPanel implements ActionListener {
     private void updateUser() {
         int selectedRow = userTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "请选择要更新的用户！");
+            JOptionPane.showMessageDialog(null, "Please select a user to update!");
             return;
         }
 
@@ -182,7 +182,7 @@ public class UserManagementPanel extends JPanel implements ActionListener {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         UpdateUserDialog dialog = new UpdateUserDialog(frame, userId);
         dialog.setVisible(true);
-        loadUsers(); // 刷新表格
+        loadUsers(); // Refresh the table
     }
 
     private void performSearch() {

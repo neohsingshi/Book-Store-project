@@ -16,47 +16,47 @@ public class AddUserDialog extends JDialog implements ActionListener {
     private JButton addButton, cancelButton;
 
     public AddUserDialog(JFrame owner) {
-        super(owner, "添加用户", true);
+        super(owner, "Add User", true);
         setLayout(new BorderLayout());
 
-        // 初始化表单
+        // Initialize form
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(7, 2));
 
-        formPanel.add(new JLabel("姓名:"));
+        formPanel.add(new JLabel("Name:"));
         nameField = new JTextField();
         formPanel.add(nameField);
 
-        formPanel.add(new JLabel("性别:"));
-        genderBox = new JComboBox<>(new String[]{"男", "女"});
+        formPanel.add(new JLabel("Gender:"));
+        genderBox = new JComboBox<>(new String[]{"Male", "Female"});
         formPanel.add(genderBox);
 
-        formPanel.add(new JLabel("年龄:"));
+        formPanel.add(new JLabel("Age:"));
         ageField = new JTextField();
         formPanel.add(ageField);
 
-        formPanel.add(new JLabel("身份:"));
-        identityBox = new JComboBox<>(new String[]{"教师", "本科生", "研究生", "校外人员", "管理员"});
+        formPanel.add(new JLabel("Identity:"));
+        identityBox = new JComboBox<>(new String[]{"Teacher", "Undergraduate", "Graduate", "External Personnel", "Administrator"});
         formPanel.add(identityBox);
 
-        formPanel.add(new JLabel("ID号:"));
+        formPanel.add(new JLabel("ID Number:"));
         identifierField = new JTextField();
         formPanel.add(identifierField);
 
-        formPanel.add(new JLabel("电话:"));
+        formPanel.add(new JLabel("Phone:"));
         phoneField = new JTextField();
         formPanel.add(phoneField);
 
-        formPanel.add(new JLabel("邮箱:"));
+        formPanel.add(new JLabel("Email:"));
         emailField = new JTextField();
         formPanel.add(emailField);
 
         add(formPanel, BorderLayout.CENTER);
 
-        // 按钮面板
+        // Button panel
         JPanel buttonPanel = new JPanel();
-        addButton = new JButton("添加");
-        cancelButton = new JButton("取消");
+        addButton = new JButton("Add");
+        cancelButton = new JButton("Cancel");
 
         addButton.addActionListener(this);
         cancelButton.addActionListener(this);
@@ -72,11 +72,11 @@ public class AddUserDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if ("添加".equals(e.getActionCommand())) {
+        if ("Add".equals(e.getActionCommand())) {
             addUser();
-            dispose(); // 关闭对话框
-        } else if ("取消".equals(e.getActionCommand())) {
-            dispose(); // 关闭对话框
+            dispose(); // Close the dialog
+        } else if ("Cancel".equals(e.getActionCommand())) {
+            dispose(); // Close the dialog
         }
     }
 
@@ -87,14 +87,14 @@ public class AddUserDialog extends JDialog implements ActionListener {
         try {
             age = Integer.parseInt(ageField.getText().trim());
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "请输入有效的年龄！");
+            JOptionPane.showMessageDialog(this, "Please enter a valid age!");
             return;
         }
         String identity = (String) identityBox.getSelectedItem();
         String identifier = identifierField.getText().trim();
         String phone = phoneField.getText().trim();
         String email = emailField.getText().trim();
-        String password = "defaultpassword"; // 默认密码
+        String password = "defaultpassword"; // Default password
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(
@@ -110,10 +110,10 @@ public class AddUserDialog extends JDialog implements ActionListener {
             pstmt.setString(8, password);
 
             pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "用户添加成功！");
+            JOptionPane.showMessageDialog(null, "User added successfully!");
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "用户添加失败：" + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Failed to add user: " + ex.getMessage());
         }
     }
 }

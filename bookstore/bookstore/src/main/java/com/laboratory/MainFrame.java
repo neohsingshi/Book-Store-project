@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
 
     // The constructor initializes the main window and layout manager
     public MainFrame() {
-        setTitle("图书商店");  // Set the window title
+        setTitle("bookshop");  // Set the window title
         setSize(800, 600);  // Set the window size
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Exit the program when closing
 

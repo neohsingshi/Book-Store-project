@@ -22,10 +22,10 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version> <!-- 确认版本号是最新的 -->
+            <version>8.0.33</version> <!-- Make sure the version number is up to date -->
         </dependency>
 
-        <!-- 单元测试框架 -->
+        <!-- unit testing framework -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -33,7 +33,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- 日志记录库 (例如 SLF4J 和 Logback) -->
+        <!-- Logging libraries (e.g. SLF4J and Logback) -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -65,7 +65,7 @@
                 </configuration>
             </plugin>
 
-            <!-- 打包为可执行JAR -->
+            <!-- Packaged as an executable JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -80,7 +80,7 @@
                 </configuration>
             </plugin>
 
-            <!-- 使用 maven-shade-plugin 创建包含所有依赖的 "胖" JAR -->
+            <!-- Use maven-shade-plugin to create a “fat” JAR with all dependencies. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -102,7 +102,7 @@
                 </executions>
             </plugin>
 
-            <!-- 其他插件... -->
+            <!-- Other plug-ins... -->
         </plugins>
     </build>
 </project>

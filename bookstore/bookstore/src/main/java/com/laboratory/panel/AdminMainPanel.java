@@ -28,7 +28,7 @@ public class AdminMainPanel extends JPanel {
         tabbedPane.addTab("Book management", new BookManagementPanel());
 
         // System administration
-        tabbedPane.addTab("System administration", new SystemManagementPanel(mainFrame, userIdentifier)); // 传递 mainFrame 和 userIdentifier 给 SystemManagementPanel
+        tabbedPane.addTab("System administration", new SystemManagementPanel(mainFrame, userIdentifier)); // deliver mainFrame and userIdentifier to SystemManagementPanel
 
 
 

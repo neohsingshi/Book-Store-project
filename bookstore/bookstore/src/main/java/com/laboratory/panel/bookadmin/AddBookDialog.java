@@ -38,7 +38,7 @@ public class AddBookDialog extends JDialog {
         add(stockField);
 
         add(new JLabel("form:"));
-        categoryBox = new JComboBox<>(new String[]{"fiction", "sci-fi", "histories", "programmer", "else"}); // 示例类别
+        categoryBox = new JComboBox<>(new String[]{"fiction", "sci-fi", "histories", "programmer", "else"}); // Example Categories
         add(categoryBox);
 
         JButton okButton = new JButton("ok");

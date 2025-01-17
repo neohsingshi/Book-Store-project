@@ -98,7 +98,7 @@ public class BookManagementPanel extends JPanel implements ActionListener {
             if (!title.isEmpty()) {
                 queryBuilder.append(" AND title LIKE ?");
             }
-            if (!"全部".equals(category)) {
+            if (!"all".equals(category)) {
                 queryBuilder.append(" AND category = ?");
             }
 
